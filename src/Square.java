@@ -15,9 +15,8 @@ public class Square {
     public static final int IMMUNE=3;
 
     private int status=0;
+    private int statusSince=0;
     private int reproductionNumber;
-    private int illTicks;
-    private int immuneTicks;
 
     public Square(boolean infected){
         if(infected){
@@ -34,81 +33,84 @@ public class Square {
         switch (status){
             case HEALTHY:
                 g.setColor(Color.GREEN);
+                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
                 break;
             case INFECTED:
                 g.setColor(Color.RED);
+                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
                 break;
             case DEATH:
                 g.setColor(Color.BLACK);
+                g.fillRect((int)x+(Values.SQUARE_SIZE/3),(int)y,4,Values.SQUARE_SIZE);
+                g.fillRect((int)x,(int)y+Values.SQUARE_SIZE/4, Values.SQUARE_SIZE, Values.SQUARE_SIZE/3);
                 break;
             case IMMUNE:
                 g.setColor(Color.ORANGE);
+                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
                 break;
         }
-        g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
     }
-    public void update(){
+    public void update(int tick){
         if(status!=DEATH) {
-            x += xSpeed;
-            y += ySpeed;
-            if (x <= 0) {
-                xSpeed = random.nextInt(20) / 10.0;
-                x += xSpeed;
-            } else if (x > Values.AREA_WIDTH - Values.SQUARE_SIZE) {
-                xSpeed = -random.nextInt(20) / 10.0;
-                x += xSpeed;
-            }
-            if (y <= 0) {
-                ySpeed = random.nextInt(20) / 10.0;
-                y += ySpeed;
-            } else if (y > Values.AREA_HEIGHT - Values.SQUARE_SIZE) {
-                ySpeed = -random.nextInt(20) / 10.0;
-                y += ySpeed;
-            }
-
-            if(status==INFECTED){
-                illTicks++;
-                if(illTicks>=Values.CURE_DAYS*Values.TICKS_PER_SECOND){
+           moveUpdate();
+           if(status==INFECTED){
+                if(tick-statusSince>=Values.CURE_DAYS*Values.TICKS_PER_SECOND){
                     if(random.nextInt(20)==1){
-                        kill();
+                        kill(tick);
                     }else{
-                        cure();
+                        cure(tick);
                     }
                 }
-            }else if(status==IMMUNE){
-                immuneTicks++;
-                if(immuneTicks>=Values.IMMUNE_DAYS*Values.TICKS_PER_SECOND){
-                    status=HEALTHY;
-                    immuneTicks=0;
+           }else if(status==IMMUNE){
+                if(tick-statusSince>=Values.IMMUNE_DAYS*Values.TICKS_PER_SECOND){
+                    status = HEALTHY;
+                    statusSince = tick;
                 }
-            }
+           }
+        }
+    }
+    private void moveUpdate(){
+        x += xSpeed;
+        y += ySpeed;
+        if (x <= 0) {
+            xSpeed = random.nextInt(20) / 10.0;
+            x += xSpeed;
+        } else if (x > Values.AREA_WIDTH - Values.SQUARE_SIZE) {
+            xSpeed = -random.nextInt(20) / 10.0;
+            x += xSpeed;
+        }
+        if (y <= 0) {
+            ySpeed = random.nextInt(20) / 10.0;
+            y += ySpeed;
+        } else if (y > Values.AREA_HEIGHT - Values.SQUARE_SIZE) {
+            ySpeed = -random.nextInt(20) / 10.0;
+            y += ySpeed;
         }
     }
 
-
-    public void checkForContact(List<Square> healthySquares){
+    public void checkForContact(List<Square> healthySquares, int tick){
         for (Square square:healthySquares) {
             if(square.getX()>x-Values.SQUARE_SIZE &&
                     square.getX()<x+Values.SQUARE_SIZE &&
                     square.getY()>y-Values.SQUARE_SIZE &&
                     square.getY()<y+Values.SQUARE_SIZE ){
-                square.infect();
+                square.infect(tick);
                 reproductionNumber++;
             }
 
         }
     }
-    public void infect(){
-        if(status==HEALTHY){
-            status=INFECTED;
-        }
+    public void infect(int tick){
+        statusSince = tick;
+        status = INFECTED;
     }
-    public void cure(){
-        illTicks=0;
+    public void cure(int tick){
+        statusSince=tick;
         reproductionNumber=0;
         status=IMMUNE;
     }
-    public void kill(){
+    public void kill(int tick){
+        statusSince = tick;
         status=DEATH;
     }
     public int getReproductionNumber(){

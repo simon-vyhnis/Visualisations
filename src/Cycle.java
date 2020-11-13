@@ -17,6 +17,7 @@ public class Cycle implements Runnable {
         double unprocessedTicks=0;
         double lastNano=System.nanoTime();
         long lastMilis=System.currentTimeMillis();
+        int tickCounter=0;
         //Main loop
         while(isRunning){
             double nowNano=System.nanoTime();
@@ -24,7 +25,8 @@ public class Cycle implements Runnable {
             lastNano=nowNano;
             //Ticks processing
             while(unprocessedTicks >1){
-                Main.update();
+                Main.update(tickCounter);
+                tickCounter++;
                 ticks++;
                 unprocessedTicks--;
             }

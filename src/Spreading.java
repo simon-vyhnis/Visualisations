@@ -54,7 +54,7 @@ public class Spreading {
         }
     }
 
-    public void update(){
+    public void update(int tick){
         infected=0;
         cured=0;
         deaths=0;
@@ -79,7 +79,7 @@ public class Spreading {
         }
         //contact detecting
         for (Square square:infectedSquares){
-            square.checkForContact(healthySquares);
+            square.checkForContact(healthySquares, tick);
             reproductionNumber+=square.getReproductionNumber();
         }
         infected = infectedSquares.size();
@@ -88,13 +88,14 @@ public class Spreading {
 
         //move update
         for (Square square:squares){
-            square.update();
+            square.update(tick);
         }
-        if(infected>0) {
-            infectedGraph.update(infected);
-            curedGraph.update(cured);
-            deathsGraph.update(deaths);
-        }else {
+        //graphs update
+        infectedGraph.update(infected);
+        curedGraph.update(cured);
+        deathsGraph.update(deaths);
+        //end checking
+        if(infected<=0) {
             Main.stop();
         }
     }

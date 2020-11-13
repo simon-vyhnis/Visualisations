@@ -24,8 +24,8 @@ public class Main {
 
     }
 
-    public static void update(){
-        spreading.update();
+    public static void update(int tick){
+        spreading.update(tick);
     }
 
     public static void draw(){
