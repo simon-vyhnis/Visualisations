@@ -4,7 +4,7 @@ public class Values {
     public static final int AREA_HEIGHT = 1000;
     public static final int SQUARE_SIZE = 10;
 
-    public static final int POPULATION = 300;
+    public static final int POPULATION = 250;
     public static final int START_INFECTED = 1;
     public static final int START_HEALTHY = POPULATION-START_INFECTED;
     public static final int CURE_DAYS=10;

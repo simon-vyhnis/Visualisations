@@ -1,4 +1,8 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,17 +26,31 @@ public class Spreading {
     private int yesterdayInfected;
     private int yesterdayHealthy;
 
+    private BufferedImage redPerson;
+    private BufferedImage greenPerson = null;
+    private BufferedImage yellowPerson;
+    private BufferedImage ghost;
+
     public Spreading(){
         squares=new ArrayList<>();
         for (int i=0;  i<Values.START_HEALTHY; i++){
-            squares.add(new Square(false));
+            squares.add(new Square(false,this));
         }
         for (int i=0;  i<Values.START_INFECTED; i++){
-            squares.add(new Square(true));
+            squares.add(new Square(true,this));
         }
         infectedGraph=new Graph(400,200,Values.AREA_WIDTH+10, 180, "Infected in time", Color.RED);
         curedGraph=new Graph(400, 200, Values.AREA_WIDTH+10, 410, "Cured in time", Color.ORANGE);
         deathsGraph=new Graph(400, 200, Values.AREA_WIDTH+10, 640, "Deaths in time", Color.BLACK);
+
+        try {
+            greenPerson = ImageIO.read(new File("res/personGreen.png"));
+            redPerson = ImageIO.read(new File("res/personRed.png"));
+            yellowPerson = ImageIO.read(new File("res/personYellow.png"));
+            ghost = ImageIO.read(new File("res/ghost.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void draw(Graphics g){
@@ -114,5 +132,21 @@ public class Spreading {
         yesterdayDeaths=deaths;
         yesterdayHealthy = healthy;
         System.out.println("Infected: "+infected+" Cured: "+cured+" Deaths: "+deaths );
+    }
+
+    public Image getRedPerson() {
+        return redPerson;
+    }
+
+    public Image getGreenPerson() {
+        return greenPerson;
+    }
+
+    public Image getYellowPerson() {
+        return yellowPerson;
+    }
+
+    public Image getGhost() {
+        return ghost;
     }
 }

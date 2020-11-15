@@ -1,4 +1,8 @@
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -18,10 +22,13 @@ public class Square {
     private int statusSince=0;
     private int reproductionNumber;
 
-    public Square(boolean infected){
+    private Spreading spreading;
+
+    public Square(boolean infected, Spreading spreading){
         if(infected){
             status=INFECTED;
         }
+        this.spreading = spreading;
         random = new Random();
         x = random.nextInt(Values.AREA_WIDTH);
         y = random.nextInt(Values.AREA_HEIGHT);
@@ -32,27 +39,31 @@ public class Square {
     public void draw(Graphics g){
         switch (status){
             case HEALTHY:
-                g.setColor(Color.GREEN);
-                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                //g.setColor(Color.GREEN);
+                //g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                g.drawImage(spreading.getGreenPerson(),(int)x,(int)y,null);
                 break;
             case INFECTED:
-                g.setColor(Color.RED);
-                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                //g.setColor(Color.RED);
+                //g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                g.drawImage(spreading.getRedPerson(),(int)x,(int)y,null);
                 break;
             case DEATH:
-                g.setColor(Color.BLACK);
-                g.fillRect((int)x+(Values.SQUARE_SIZE/3),(int)y,4,Values.SQUARE_SIZE);
-                g.fillRect((int)x,(int)y+Values.SQUARE_SIZE/4, Values.SQUARE_SIZE, Values.SQUARE_SIZE/3);
+                //g.setColor(Color.BLACK);
+                //g.fillRect((int)x+(Values.SQUARE_SIZE/3),(int)y,4,Values.SQUARE_SIZE);
+                //g.fillRect((int)x,(int)y+Values.SQUARE_SIZE/4, Values.SQUARE_SIZE, Values.SQUARE_SIZE/3);
+                g.drawImage(spreading.getGhost(),(int)x,(int)y,null);
                 break;
             case IMMUNE:
-                g.setColor(Color.ORANGE);
-                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                //g.setColor(Color.ORANGE);
+                //g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                g.drawImage(spreading.getYellowPerson(),(int)x,(int)y,null);
                 break;
         }
     }
     public void update(int tick){
+        moveUpdate();
         if(status!=DEATH) {
-           moveUpdate();
            if(status==INFECTED){
                 if(tick-statusSince>=Values.CURE_DAYS*Values.TICKS_PER_SECOND){
                     if(random.nextInt(20)==1){
