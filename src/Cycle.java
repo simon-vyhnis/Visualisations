@@ -9,7 +9,6 @@ public class Cycle implements Runnable {
     @Override
     public void run() {
         //initialization
-        long startTime;
         int FPS=0;
         int ticks=0;
         double nanoPerTick = 1000000000/Values.TICKS_PER_SECOND;

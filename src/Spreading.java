@@ -21,13 +21,10 @@ public class Spreading {
     private Graph deathsGraph;
 
     private int dailyGrowth;
-    private int yesterdayCured;
-    private int yesterdayDeaths;
-    private int yesterdayInfected;
-    private int yesterdayHealthy;
+    private int yesterdayDailyGrowth;
 
     private BufferedImage redPerson;
-    private BufferedImage greenPerson = null;
+    private BufferedImage greenPerson;
     private BufferedImage yellowPerson;
     private BufferedImage ghost;
 
@@ -120,18 +117,13 @@ public class Spreading {
 
     public void secondUpdate(){
         day++;
-        int deltaCured = cured-yesterdayCured;
-        int deltaDeath = deaths-yesterdayDeaths;
-        int deltaHealthy = healthy-yesterdayHealthy;
-        int deltaInfected = infected-yesterdayInfected;
-        int healthyGrowth;
-        int curedGrowth;
-        dailyGrowth=deltaInfected+deltaDeath;
-        yesterdayInfected=infected;
-        yesterdayCured=cured;
-        yesterdayDeaths=deaths;
-        yesterdayHealthy = healthy;
+        yesterdayDailyGrowth = dailyGrowth;
+        dailyGrowth = 0;
         System.out.println("Infected: "+infected+" Cured: "+cured+" Deaths: "+deaths );
+    }
+
+    public void increaseDailyGrowth(){
+        dailyGrowth++;
     }
 
     public Image getRedPerson() {

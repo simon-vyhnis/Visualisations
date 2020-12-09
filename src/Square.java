@@ -39,14 +39,14 @@ public class Square {
     public void draw(Graphics g){
         switch (status){
             case HEALTHY:
-                //g.setColor(Color.GREEN);
-                //g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
-                g.drawImage(spreading.getGreenPerson(),(int)x,(int)y,null);
+                g.setColor(Color.GREEN);
+                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                //g.drawImage(spreading.getGreenPerson(),(int)x,(int)y,null);
                 break;
             case INFECTED:
-                //g.setColor(Color.RED);
-                //g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
-                g.drawImage(spreading.getRedPerson(),(int)x,(int)y,null);
+                g.setColor(Color.RED);
+                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                //g.drawImage(spreading.getRedPerson(),(int)x,(int)y,null);
                 break;
             case DEATH:
                 //g.setColor(Color.BLACK);
@@ -55,9 +55,9 @@ public class Square {
                 g.drawImage(spreading.getGhost(),(int)x,(int)y,null);
                 break;
             case IMMUNE:
-                //g.setColor(Color.ORANGE);
-                //g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
-                g.drawImage(spreading.getYellowPerson(),(int)x,(int)y,null);
+                g.setColor(Color.ORANGE);
+                g.fillRect((int)x,(int)y,Values.SQUARE_SIZE,Values.SQUARE_SIZE);
+                //g.drawImage(spreading.getYellowPerson(),(int)x,(int)y,null);
                 break;
         }
     }
@@ -114,6 +114,7 @@ public class Square {
     public void infect(int tick){
         statusSince = tick;
         status = INFECTED;
+        spreading.increaseDailyGrowth();
     }
     public void cure(int tick){
         statusSince=tick;
